@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Artiste | Expérience Immersive</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700&family=Playfair+Display:ital,wght@0,900;1,900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #121212; /* Noir anthracite délavé */
+            --text-color: #f4f4f4;
+            --accent-color: #ffffff;
+            --transition-speed: 0.8s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden; /* Désactive le scroll classique pour le snap scrolling */
+        }
+
+        /* --- STRUCTURE SNAP SCROLL --- */
+        .container {
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scrollbar-width: none; /* Cache la barre sur Firefox */
+        }
+
+        .container::-webkit-scrollbar {
+            display: none; /* Cache la barre sur Chrome/Safari */
+        }
+
+        section {
+            height: 100vh;
+            width: 100%;
+            scroll-snap-align: start;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            perspective: 1000px;
+        }
+
+        /* --- NAVIGATION FIXE --- */
+        nav {
+            position: fixed;
+            top: 40px;
+            right: 50px;
+            z-index: 100;
+            display: flex;
+            gap: 30px;
+        }
+
+        nav a {
+            color: var(--text-color);
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            transition: opacity 0.3s;
+        }
+
+        nav a:hover {
+            opacity: 0.5;
+        }
+
+        /* Indicateurs de progression (Points à droite) */
+        .nav-dots {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border: 1px solid var(--text-color);
+            border-radius: 50%;
+            transition: background 0.3s;
+        }
+
+        .dot.active {
+            background: var(--text-color);
+        }
+
+        /* --- SECTIONS --- */
+
+        /* Image de fond avec effet Parallaxe */
+        .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 110%; /* Plus large pour le mouvement parallaxe */
+            height: 110%;
+            background-size: cover;
+            background-position: center;
+            z-index: 1;
+            transition: transform 0.1s ease-out;
+            filter: brightness(0.6);
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease-out;
+        }
+
+        /* Animation au scroll */
+        .is-visible .content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Titre Section 1 */
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(5rem, 15vw, 12rem);
+            line-height: 0.8;
+            margin-bottom: 20px;
+            -webkit-text-stroke: 1px rgba(255,255,255,0.3);
+            color: transparent;
+            text-transform: uppercase;
+        }
+
+        .hero-subtitle {
+            font-weight: 300;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+        }
+
+        /* Galerie d'œuvres */
+        .artwork-container {
+            width: 60vw;
+            height: 70vh;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .artwork-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s ease;
+        }
+
+        .artwork-container:hover .artwork-img {
+            transform: scale(1.05);
+        }
+
+        .artwork-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 40px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            opacity: 0;
+            transition: opacity 0.5s;
+            text-align: left;
+        }
+
+        .artwork-container:hover .artwork-info {
+            opacity: 1;
+        }
+
+        .artwork-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+        }
+
+        /* Footer / Contact */
+        .contact-text {
+            max-width: 600px;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav { right: 20px; top: 20px; }
+            .artwork-container { width: 90vw; height: 50vh; }
+            .hero-title { font-size: 4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="#section1">Accueil</a>
+        <a href="#section2">Galerie</a>
+        <a href="#section4">À Propos</a>
+    </nav>
+
+    <div class="nav-dots">
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+    </div>
+
+    <div class="container" id="main-container">
+        
+        <section id="section1">
+            <div class="bg-image" style="background-image: url('https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&q=80&w=2000');"></div>
+            <div class="content">
+                <h1 class="hero-title">ARTISTE</h1> <p class="hero-subtitle">Plongez dans un univers visuel</p>
+            </div>
+        </section>
+
+        <section id="section2">
+            <div class="content">
+                <div class="artwork-container">
+                    <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=1000" class="artwork-img" alt="Oeuvre 1">
+                    <div class="artwork-info">
+                        <h2 class="artwork-title">Éclosion de formes</h2> <p>Huile sur toile, 2024</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="section3">
+            <div class="content">
+                <div class="artwork-container">
+                    <img src="https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?auto=format&fit=crop&q=80&w=1000" class="artwork-img" alt="Oeuvre 2">
+                    <div class="artwork-info">
+                        <h2 class="artwork-title">Abstrait No. 42</h2> <p>Technique mixte, 2023</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="section4">
+            <div class="content">
+                <h2 style="font-family: 'Playfair Display', serif; font-size: 3rem; margin-bottom: 20px;">À Propos</h2>
+                <div class="contact-text">
+                    <p>Artiste visuel basé à Paris, j'explore la relation entre la lumière et les textures numériques. Mon travail cherche à capturer l'éphémère dans un monde en mouvement constant.</p>
+                    <br>
+                    <p><strong>Contact :</strong> hello@monartiste.com</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        const container = document.getElementById('main-container');
+        const sections = document.querySelectorAll('section');
+        const dots = document.querySelectorAll('.dot');
+        const bgImages = document.querySelectorAll('.bg-image');
+
+        // Initialisation de la première section
+        sections[0].classList.add('is-visible');
+
+        // Gestion du Scroll et des animations
+        container.addEventListener('scroll', () => {
+            let current = "";
+            
+            sections.forEach((section, index) => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                
+                // Détection de la section active
+                if (container.scrollTop >= sectionTop - sectionHeight / 3) {
+                    current = index;
+                    section.classList.add('is-visible');
+                } else {
+                    section.classList.remove('is-visible');
+                }
+
+                // Effet Parallaxe léger sur les images de fond
+                if (bgImages[index]) {
+                    const scrollOffset = (container.scrollTop - sectionTop) * 0.1;
+                    bgImages[index].style.transform = `translateY(${scrollOffset}px)`;
+                }
+            });
+
+            // Mise à jour des points de navigation
+            dots.forEach((dot, index) => {
+                dot.classList.remove('active');
+                if (index === current) {
+                    dot.classList.add('active');
+                }
+            });
+        });
+
+        // Click sur les points pour naviguer
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                sections[index].scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
